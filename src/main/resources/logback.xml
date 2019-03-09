@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1)scan:设置为true时，每次修改配置文件，都会重新加载 2)scanPeriod:检测配置文件是否被修改的时间间隔，当scan为true时才生效 
+	3)debug:设置为true会实时打印logback日志信息 -->
+<configuration scan="true" scanPeriod="60 seconds"
+	debug="false">
+	<!-- 定义参数常量 -->
+	<!-- 日志级别(级别从小到大): 1.TRACE 2.DEBUG 3.INFO 4.WARN 5.ERROR -->
+	<!-- 程序中使用：logger.级别() 例:logger.trace("msg") -->
+	<!-- 程序中日志级别小于的配置文件中的日志级别的话，不会被显示 -->
+	<property name="log.level" value="debug" />
+	<property name="log.maxHistory" value="30" />
+	<property name="log.filePath"
+		value="${catalina.base}/logs/webapps" />
+	<!-- 日志展示格式 -->
+	<property name="log.pattern"
+		value="%d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{50}-%msg%n" />
+	<!-- 控制台设置 -->
+	<appender name="consoleAppender"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<!-- 负责将event事件转化成byte数组，同时将日志输出到对应的介质中 -->
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>
+	<!-- DEBUG -->
+	<appender name="debugAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 文件路径 -->
+		<file>${log.filePath}/debug.log</file>
+		<!-- 基于时间滚动 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 文件名称 -->
+			<fileNamePattern>${log.filePath}/debug/debug.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量,超过数量会将之前最早的文件给覆盖 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 过滤掉其他日志，只记录设定级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- INFO -->
+	<appender name="infoAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 文件路径 -->
+		<file>${log.filePath}/info.log</file>
+		<!-- 基于时间滚动 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 文件名称 -->
+			<fileNamePattern>${log.filePath}/info/info.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量,超过数量会将之前最早的文件给覆盖 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 过滤掉其他日志，只记录设定级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- ERROR -->
+	<appender name="errorAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 文件路径 -->
+		<file>${log.filePath}/error.log</file>
+		<!-- 基于时间滚动 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 文件名称 -->
+			<fileNamePattern>${log.filePath}/error/error.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量,超过数量会将之前最早的文件给覆盖 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 过滤掉其他日志，只记录设定级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- 存放日志对象:name:设定具体包下面的日志信息,additivity:为true时，会将root下的appender放入 -->
+	<logger name="com.imooc.o2o" level="${log.level}" additivity="true">
+		<!-- 绑定定义的Appender信息 -->
+		<appender-ref ref="debugAppender" />
+		<appender-ref ref="infoAppender" />
+		<appender-ref ref="errorAppender" />
+	</logger>
+	<!-- 根logger,如果子logger的级别level没有指定，则自动继承父logger的级别 -->
+	<root level="info">
+		<appender-ref ref="consoleAppender"/>
+	</root>
+</configuration>
