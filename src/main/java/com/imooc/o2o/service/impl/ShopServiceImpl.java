@@ -1,6 +1,5 @@
 package com.imooc.o2o.service.impl;
 
-import java.io.File;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -13,6 +12,7 @@ import com.imooc.o2o.dao.ShopDao;
 import com.imooc.o2o.dto.ShopExecution;
 import com.imooc.o2o.entity.Shop;
 import com.imooc.o2o.enums.ShopStateEnum;
+import com.imooc.o2o.exceptions.ShopOperationException;
 import com.imooc.o2o.service.ShopService;
 import com.imooc.o2o.util.ImageUtil;
 import com.imooc.o2o.util.PathUtil;
@@ -57,8 +57,8 @@ public class ShopServiceImpl implements ShopService {
             int effectedNum = shopDao.insertShop(shop);
             if (effectedNum <= 0) {
                 logger.error("店铺创建失败");
-                // 主动抛出RuntimeException,终止事务,回滚
-                throw new RuntimeException("店铺创建失败");
+                // 主动抛出ShopOperationException,终止事务,回滚
+                throw new ShopOperationException("店铺创建失败");
             }
             else {
                 if (shopImg != null) {
@@ -68,13 +68,13 @@ public class ShopServiceImpl implements ShopService {
                     }
                     catch (Exception e) {
                         logger.error("添加店铺图片失败" + e.getMessage());
-                        throw new RuntimeException("addShopImg error:" + e.getMessage());
+                        throw new ShopOperationException("addShopImg error:" + e.getMessage());
                     }
                     // 更新店铺的图片地址
                     effectedNum = shopDao.updateShop(shop);
                     if (effectedNum <= 0) {
                         logger.error("更新图片失败");
-                        throw new RuntimeException("更新图片失败");
+                        throw new ShopOperationException("更新图片失败");
                     }
                 }
             }
@@ -86,9 +86,8 @@ public class ShopServiceImpl implements ShopService {
     }
 
     /**
+     * Description:获取图片缩略图的相对路径<br>
      * 
-     * Description:获取图片缩略图的相对路径<br> 
-     *  
      * @author HuangWenyi<br>
      * @taskId <br>
      * @param shop
