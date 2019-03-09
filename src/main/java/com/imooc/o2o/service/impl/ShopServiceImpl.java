@@ -86,8 +86,9 @@ public class ShopServiceImpl implements ShopService {
     }
 
     /**
-     * Description:获取图片缩略图的相对路径<br>
      * 
+     * Description:获取图片缩略图的相对路径<br> 
+     *  
      * @author HuangWenyi<br>
      * @taskId <br>
      * @param shop
