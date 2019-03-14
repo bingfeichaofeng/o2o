@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -27,6 +28,7 @@ import com.imooc.o2o.util.PathUtil;
  * @since V1.0<br>
  * @see com.imooc.o2o.service.impl <br>
  */
+@Service("shopService")
 public class ShopServiceImpl implements ShopService {
     private final static Logger logger = LoggerFactory.getLogger(ShopServiceImpl.class);
 

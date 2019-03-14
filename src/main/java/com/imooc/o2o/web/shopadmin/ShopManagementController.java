@@ -20,6 +20,7 @@ import com.imooc.o2o.entity.PersonInfo;
 import com.imooc.o2o.entity.Shop;
 import com.imooc.o2o.enums.ShopStateEnum;
 import com.imooc.o2o.service.ShopService;
+import com.imooc.o2o.util.CodeUtil;
 import com.imooc.o2o.util.HttpServletRequestUtil;
 
 /**
@@ -50,6 +51,12 @@ public class ShopManagementController {
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
     private Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<String, Object>();
+        //判断验证码是否正确
+        if(!CodeUtil.checkVerifyCode(request)) {
+            modelMap.put("successs", false);
+            modelMap.put("errMsg", "输入了错误的验证码");
+            return modelMap;
+        }
         // 1.接受并转化相应的参数，包括店铺信息以及图片信息
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");
         ObjectMapper mapper = new ObjectMapper();
